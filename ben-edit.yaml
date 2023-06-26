@@ -4,21 +4,16 @@ services:
   loxilb:
     container_name: lb
     image: ghcr.io/loxilb-io/loxilb:latestu22 #ghcr.io/loxilb-io/loxilb:v0.8.6
-    # command: bash"sleep 8 && loxicmd create lb 20.20.20.1 --sctp=38412:38412 --endpoints=10.100.200.102:1,10.100.200.103:1 --mode=onearm"
-    command: 
-      sleep 8 &&\
-      loxicmd create lb 20.20.20.1 --sctp=38412:38412 --endpoints=10.100.200.102:1,10.100.200.103:1 --mode=onearm
+    command: loxicmd create lb 20.20.20.1 --sctp=38412:38412 --endpoints=10.10.200.102:1,10.10.200.103:1 --mode=onearm
     cap_add:
       - SYS_ADMIN
     privileged: true
     networks:
-      privnet:
+      network:
         ipv4_address: 10.100.200.101
+      privnet:
         aliases:
           - lb.free5gc.org
-    depends_on:
-      - free5gc-amf
-      - free5gc-amf2
 
   free5gc-upf:
     container_name: upf
@@ -76,8 +71,9 @@ services:
     environment:
       GIN_MODE: release
     networks:
-      privnet:
+      network:
         ipv4_address: 10.100.200.102
+      privnet:
         aliases:
           - amf.free5gc.org
     depends_on:
@@ -95,13 +91,13 @@ services:
     environment:
       GIN_MODE: release
     networks:
-      privnet:
+      network:
         ipv4_address: 10.100.200.103
+      privnet:
         aliases:
           - amf2.free5gc.org
     depends_on:
       - free5gc-nrf
-      - free5gc-amf
       
   free5gc-ausf:
     container_name: ausf
@@ -265,7 +261,6 @@ services:
     depends_on:
       - free5gc-amf
       - free5gc-upf
-      - loxilb
 
 networks:
   privnet:
