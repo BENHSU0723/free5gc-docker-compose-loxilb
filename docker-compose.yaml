@@ -3,11 +3,8 @@ version: '3.8'
 services:
   loxilb:
     container_name: lb
-    image: ghcr.io/loxilb-io/loxilb:latestu22 #ghcr.io/loxilb-io/loxilb:v0.8.6
-    # command: bash"sleep 8 && loxicmd create lb 20.20.20.1 --sctp=38412:38412 --endpoints=10.100.200.102:1,10.100.200.103:1 --mode=onearm"
-    command: 
-      sleep 8 &&\
-      loxicmd create lb 20.20.20.1 --sctp=38412:38412 --endpoints=10.100.200.102:1,10.100.200.103:1 --mode=onearm
+    image: ghcr.io/loxilb-io/loxilb:latestu22
+    # command: loxicmd create lb 20.20.20.1 --sctp=38412:38412 --endpoints=10.100.200.102:1,10.100.200.103:1 --mode=onearm
     cap_add:
       - SYS_ADMIN
     privileged: true
@@ -102,7 +99,7 @@ services:
     depends_on:
       - free5gc-nrf
       - free5gc-amf
-      
+
   free5gc-ausf:
     container_name: ausf
     image: free5gc/ausf:v3.3.0
@@ -250,7 +247,8 @@ services:
   ueransim:
     container_name: ueransim
     image: free5gc/ueransim:latest
-    command: bash -c "ip route add 20.20.20.1/32 dev eth0 via 10.100.200.101 && ./nr-gnb -c ./config/gnbcfg.yaml"
+    command: bash -c "ip route add 20.20.20.1/32 dev eth0 via 10.100.200.101 && \
+      sleep infinity"
     volumes:
       - ./config/gnbcfg.yaml:/ueransim/config/gnbcfg.yaml
       - ./config/uecfg.yaml:/ueransim/config/uecfg.yaml
